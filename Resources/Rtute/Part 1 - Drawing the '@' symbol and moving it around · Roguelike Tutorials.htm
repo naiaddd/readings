@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme: dark;"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>
+  Part 1 - Drawing the '@' symbol and moving it around · Roguelike Tutorials
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="Welcome to part 1 of this tutorial! This series will help you create your very first roguelike game, written in Python!
+This tutorial is largely based off the one found on Roguebasin. Many of the design decisions were mainly to keep this tutorial in lockstep with that one (at least in terms of chapter composition and general direction). This tutorial would not have been possible without the guidance of those who wrote that tutorial, along with all the wonderful contributors to tcod and python-tcod over the years.">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Part 1 - Drawing the '@' symbol and moving it around">
+<meta name="twitter:description" content="Welcome to part 1 of this tutorial! This series will help you create your very first roguelike game, written in Python!
+This tutorial is largely based off the one found on Roguebasin. Many of the design decisions were mainly to keep this tutorial in lockstep with that one (at least in terms of chapter composition and general direction). This tutorial would not have been possible without the guidance of those who wrote that tutorial, along with all the wonderful contributors to tcod and python-tcod over the years.">
+
+<meta property="og:title" content="Part 1 - Drawing the '@' symbol and moving it around">
+<meta property="og:description" content="Welcome to part 1 of this tutorial! This series will help you create your very first roguelike game, written in Python!
+This tutorial is largely based off the one found on Roguebasin. Many of the design decisions were mainly to keep this tutorial in lockstep with that one (at least in terms of chapter composition and general direction). This tutorial would not have been possible without the guidance of those who wrote that tutorial, along with all the wonderful contributors to tcod and python-tcod over the years.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rogueliketutorials.com/tutorials/tcod/v2/part-1/"><meta property="article:section" content="tutorials">
+<meta property="article:published_time" content="2020-06-14T11:35:26-07:00">
+<meta property="article:modified_time" content="2020-06-14T11:35:26-07:00">
+
+
+
+
+<link rel="canonical" href="https://rogueliketutorials.com/tutorials/tcod/v2/part-1/">
+
+
+<link rel="preload" href="https://www.rogueliketutorials.com/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin="">
+
+
+  
+  
+  <link rel="stylesheet" href="Part%201%20-%20Drawing%20the%20'@'%20symbol%20and%20moving%20it%20around%20%C2%B7%20Roguelike%20Tutorials_files/coder.min.c4d7e93a158eda5a65b3df343745d2092a0a1e2170feeec909.css" integrity="sha256-xNfpOhWO2lpls980N0XSCSoKHiFw/u7JCbiolEOQPGo=" crossorigin="anonymous" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="Part%201%20-%20Drawing%20the%20'@'%20symbol%20and%20moving%20it%20around%20%C2%B7%20Roguelike%20Tutorials_files/coder-dark.min.78b5fe3864945faf5207fb8fe3ab2320d49c3365def0e.css" integrity="sha256-eLX+OGSUX69SB/uP46sjINScM2Xe8OiKwd8N2txUoDw=" crossorigin="anonymous" media="screen">
+  
+
+
+
+ 
+  
+    
+    <link rel="stylesheet" href="Part%201%20-%20Drawing%20the%20'@'%20symbol%20and%20moving%20it%20around%20%C2%B7%20Roguelike%20Tutorials_files/style.min.9d3eb202952dddb888856ff12c83bc88de866c596286bfb4c1.css" integrity="sha256-nT6yApUt3biIhW/xLIO8iN6GbFlihr+0wfjmvq2a42Y=" crossorigin="anonymous" media="screen">
+  
+
+
+
+
+
+<link rel="icon" type="image/png" href="https://www.rogueliketutorials.com/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://www.rogueliketutorials.com/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://www.rogueliketutorials.com/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://www.rogueliketutorials.com/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://www.rogueliketutorials.com/site.webmanifest">
+<link rel="mask-icon" href="https://www.rogueliketutorials.com/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  <link href="data:text/css,%3Ais(%5Bid*%3D'google_ads_iframe'%5D%2C%5Bid*%3D'taboola-'%5D%2C.taboolaHeight%2C.taboola-placeholder%2C%23credential_picker_container%2C%23credentials-picker-container%2C%23credential_picker_iframe%2C%5Bid*%3D'google-one-tap-iframe'%5D%2C%23google-one-tap-popup-container%2C.google-one-tap-modal-div%2C%23amp_floatingAdDiv%2C%23ez-content-blocker-container)%20%7Bdisplay%3Anone!important%3Bmin-height%3A0!important%3Bheight%3A0!important%3B%7D" rel="stylesheet" type="text/css"></head>
+
+
+
+
+
+
+<body class="colorscheme-dark">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://www.rogueliketutorials.com/">
+      Roguelike Tutorials
+    </a>
+    
+      <input type="checkbox" id="menu-toggle">
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/">Home</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/tutorials/tcod/v2/">TCOD Tutorial (2020)</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/tutorials/tcod/2019/">TCOD Tutorial (2019)</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://rogueliketutorials.com/tutorials/tcod/v2/part-1/">
+          Part 1 - Drawing the '@' symbol and moving it around
+        </a>
+      </h1>
+    </header>
+
+    <p>Welcome to part 1 of this tutorial! This series will help you create your very first roguelike game, written in Python!</p>
+<p>This tutorial is largely based off the <a href="http://www.roguebasin.com/index.php?title=Complete_Roguelike_Tutorial,_using_python%2Blibtcod">one found on Roguebasin</a>.
+ Many of the design decisions were mainly to keep this tutorial in 
+lockstep
+with that one (at least in terms of chapter composition and general 
+direction). This tutorial would not have been possible without the 
+guidance of those who wrote that tutorial, along with all the wonderful 
+contributors to tcod and python-tcod over the years.</p>
+<p>This part assumes that you have either checked <a href="https://www.rogueliketutorials.com/tutorials/tcod/part-0">Part 0</a>
+ and are already set up and ready to go. If not, be sure to check that 
+page, and make sure that you’ve got Python and TCOD installed, and a 
+file called <code>main.py</code> created in the directory that you want to work in.</p>
+<p>Assuming that you’ve done all that, let’s get started. Modify (or create, if you haven’t already) the file <code>main.py</code> to look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> tcod
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">"Hello World!"</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">"__main__"</span>:
+</span></span><span style="display:flex;"><span>    main()</span></span></code></pre></div>
+<p>You can run the program like any other Python program, but for those who are brand new, you do that by typing <code>python main.py</code> in the terminal. If you have both Python 2 and 3 installed on your machine, you might have to use <code>python3 main.py</code> to run (it depends on your default python, and whether you’re using a virtualenv or not).</p>
+<p>Alternatively, because of the first line, <code>#!usr/bin/env python</code>, you can run the program by typing <code>./main.py</code>,
+ assuming you’ve either activated your virtual environment, or installed
+ tcod on your base Python installation. This line is called a “shebang”.</p>
+<p>Okay, not the most exciting program in the world, I admit, but we’ve 
+already got our first major difference from the other tutorial. Namely, 
+this funky looking thing here:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">"__main__"</span>:
+</span></span><span style="display:flex;"><span>    main()</span></span></code></pre></div>
+<p>So what does that do? Basically, we’re saying that we’re only going 
+to run the “main” function when we explicitly run the script, using <code>python main.py</code>. It’s not super important that you understand this now, but if you want a more detailed explanation, <a href="https://stackoverflow.com/a/419185">this answer on Stack Overflow</a> gives a pretty good overview.</p>
+<p>Confirm that the above program runs (if not, there’s probably an 
+issue with your tcod setup). Once that’s done, we can move on to bigger 
+and better things. The first major step to creating any roguelike is 
+getting an ‘@’ character on the screen and moving, so let’s get started 
+with that.</p>
+<p>Modify <code>main.py</code> to look like this:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> tcod
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>() <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>    screen_width <span style="color:#f92672">=</span> <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>    screen_height <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    tileset <span style="color:#f92672">=</span> tcod<span style="color:#f92672">.</span>tileset<span style="color:#f92672">.</span>load_tilesheet(
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">"dejavu10x10_gs_tc.png"</span>, <span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">8</span>, tcod<span style="color:#f92672">.</span>tileset<span style="color:#f92672">.</span>CHARMAP_TCOD
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> tcod<span style="color:#f92672">.</span>context<span style="color:#f92672">.</span>new_terminal(
+</span></span><span style="display:flex;"><span>        screen_width,
+</span></span><span style="display:flex;"><span>        screen_height,
+</span></span><span style="display:flex;"><span>        tileset<span style="color:#f92672">=</span>tileset,
+</span></span><span style="display:flex;"><span>        title<span style="color:#f92672">=</span><span style="color:#e6db74">"Yet Another Roguelike Tutorial"</span>,
+</span></span><span style="display:flex;"><span>        vsync<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,
+</span></span><span style="display:flex;"><span>    ) <span style="color:#66d9ef">as</span> context:
+</span></span><span style="display:flex;"><span>        root_console <span style="color:#f92672">=</span> tcod<span style="color:#f92672">.</span>Console(screen_width, screen_height, order<span style="color:#f92672">=</span><span style="color:#e6db74">"F"</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>            root_console<span style="color:#f92672">.</span>print(x<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, y<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, string<span style="color:#f92672">=</span><span style="color:#e6db74">"@"</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            context<span style="color:#f92672">.</span>present(root_console)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> event <span style="color:#f92672">in</span> tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>wait():
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> event<span style="color:#f92672">.</span>type <span style="color:#f92672">==</span> <span style="color:#e6db74">"QUIT"</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">SystemExit</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">"__main__"</span>:
+</span></span><span style="display:flex;"><span>    main()</span></span></code></pre></div>
+<p>Run <code>main.py</code> again, and you should see an ‘@’ symbol on 
+the screen. Once you’ve fully soaked in the glory on the screen in front
+ of you, you can click the “X” in the top-left corner of the program to 
+close it.</p>
+<p>There’s a lot going on here, so let’s break it down line by line.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>    screen_width <span style="color:#f92672">=</span> <span style="color:#ae81ff">80</span>
+</span></span><span style="display:flex;"><span>    screen_height <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span></span></span></code></pre></div>
+<p>This is simple enough. We’re defining some variables for the screen size.</p>
+<p>Eventually, we’ll load these values from a JSON file rather than hard
+ coding them in the source, but we won’t worry about that until we have 
+some more variables like this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>    tileset <span style="color:#f92672">=</span> tcod<span style="color:#f92672">.</span>tileset<span style="color:#f92672">.</span>load_tilesheet(
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">"dejavu10x10_gs_tc.png"</span>, <span style="color:#ae81ff">32</span>, <span style="color:#ae81ff">8</span>, tcod<span style="color:#f92672">.</span>tileset<span style="color:#f92672">.</span>CHARMAP_TCOD
+</span></span><span style="display:flex;"><span>    )</span></span></code></pre></div>
+<p>Here, we’re telling tcod which font to use. The <code>"dejavu10x10_gs_tc.png"</code> bit is the actual file we’re reading from (this should exist in your project folder).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>    <span style="color:#66d9ef">with</span> tcod<span style="color:#f92672">.</span>context<span style="color:#f92672">.</span>new_terminal(
+</span></span><span style="display:flex;"><span>        screen_width,
+</span></span><span style="display:flex;"><span>        screen_height,
+</span></span><span style="display:flex;"><span>        tileset<span style="color:#f92672">=</span>tileset
+</span></span><span style="display:flex;"><span>        title<span style="color:#f92672">=</span><span style="color:#e6db74">"Yet Another Roguelike Tutorial"</span>,
+</span></span><span style="display:flex;"><span>        vsync<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>,
+</span></span><span style="display:flex;"><span>    ) <span style="color:#66d9ef">as</span> context:</span></span></code></pre></div>
+<p>This part is what actually creates the screen. We’re giving it the <code>screen_width</code> and <code>screen_height</code>
+ values from before (80 and 50, respectively), along with a title 
+(change this if you’ve already got your game’s name figured out). <code>tileset</code> uses the tileset we defined earlier. and <code>vsync</code> will either enable or disable vsync, which shouldn’t matter too much in our case.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>        root_console <span style="color:#f92672">=</span> tcod<span style="color:#f92672">.</span>Console(screen_width, screen_height, order<span style="color:#f92672">=</span><span style="color:#e6db74">"F"</span>)</span></span></code></pre></div>
+<p>This creates our “console” which is what we’ll be drawing to. We also
+ set this console’s width and height to the same as our new terminal. 
+The “order” argument affects the order of our x and y variables in numpy
+ (an underlying library that tcod uses). By default, numpy accesses 2D 
+arrays in [y, x] order, which is fairly unintuitive. By setting <code>order="F"</code>, we can change this to be [x, y] instead. This will make more sense once we start drawing the map.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:</span></span></code></pre></div>
+<p>This is what’s called our ‘game loop’. Basically, this is a loop that
+ won’t ever end, until we close the screen. Every game has some sort of 
+game loop or another.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>            root_console<span style="color:#f92672">.</span>print(x<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, y<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, string<span style="color:#f92672">=</span><span style="color:#e6db74">"@"</span>)</span></span></code></pre></div>
+<p>This line is what tells the program to actually put the “@” symbol on the screen in its proper place. We’re telling the <code>root_console</code> we created to <code>print</code> the “@” symbol at the given x and y coordinates. Try changing the x and y values and see what happens, if you feel so inclined.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>            context<span style="color:#f92672">.</span>present(root_console)</span></span></code></pre></div>
+<p>Without this line, nothing would actually print out on the screen. This is because <code>context.present</code> is what actually updates the screen with what we’ve told it to display so far.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> event <span style="color:#f92672">in</span> tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>wait():
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> event<span style="color:#f92672">.</span>type <span style="color:#f92672">==</span> <span style="color:#e6db74">"QUIT"</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">SystemExit</span>()</span></span></code></pre></div>
+<p>This part gives us a way to gracefully exit (i.e. not crashing) the program by hitting the <code>X</code> button in the console’s window. The line <code>for event in tcod.event.wait()</code>
+ will wait for some sort of input from the user (mouse clicks, keyboard 
+strokes, etc.) and loop through each event that happened. <code>SystemExit()</code> tells Python to quit the current running program.</p>
+<p>Alright, our “@” symbol is successfully displayed on the screen, but 
+we can’t rest just yet. We still need to get it moving around!</p>
+<p>We need to keep track of the player’s position at all times. Since 
+this is a 2D game, we can express this in two data points: the <code>x</code> and <code>y</code> coordinates. Let’s create two variables, <code>player_x</code> and <code>player_y</code>, to keep track of this.</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    screen_height = 50
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   player_x = int(screen_width / 2)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   player_y = int(screen_height / 2)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>    tileset = tcod.tileset.load_tilesheet(
+</span></span><span style="display:flex;"><span>        "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>    ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>    ...
+    screen_height = 50
+    <span class="new-text">
+    player_x = int(screen_width / 2)
+    player_y = int(screen_height / 2)
+    </span>
+    tileset = tcod.tileset.load_tilesheet(
+        "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
+    )
+    ...</pre>
+
+</div>
+
+</div>
+
+<p><em>Note: Ellipses denote omitted parts of the code. I’ll include 
+lines around the code to be inserted so that you’ll know exactly where 
+to put new pieces of code, but I won’t be showing the entire file every 
+time. The green lines denote code that you should be adding.</em></p>
+<p>We’re placing the player right in the middle of the screen. What’s with the <code>int()</code>
+ function though? Well, Python 3 doesn’t automatically
+truncate division like Python 2 does, so we have to cast the division 
+result (a float) to an integer. If we don’t, tcod will give an error.</p>
+<p><em>Note: It’s been pointed out that you could divide with <code>//</code> instead of <code>/</code>
+ and achieve the same effect. This is true, except in cases where, for 
+whatever reason, one of the numbers given is a decimal. For example, <code>screen_width // 2.0</code> will give an error. That shouldn’t happen in this case, but wrapping the function in <code>int()</code> gives us certainty that this won’t ever happen.</em></p>
+<p>We also have to modify the command to put the ‘@’ symbol to use these new coordinates.</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>        ...
+</span></span><span style="display:flex;"><span>        while True:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-           root_console.print(x=1, y=1, string="@")
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+           root_console.print(x=player_x, y=player_y, string="@")
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>            context.present(root_console)
+</span></span><span style="display:flex;"><span>            ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>        ...
+        while True:
+            <span class="crossed-out-text">root_console.print(x=1, y=1, string="@")</span>
+            <span class="new-text">root_console.print(x=player_x, y=player_y, string="@")</span>
+
+            context.present(root_console)
+            ...</pre>
+
+</div>
+
+</div>
+
+<p><em>Note: The red lines denote code that has been removed.</em></p>
+<p>Run the code now and you should see the ‘@’ in the center of the screen. Let’s take care of moving it around now.</p>
+<p>So, how do we actually capture the user’s input? TCOD makes this 
+pretty easy, and in fact, we’re already doing it. This line takes care 
+of it for us:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> event <span style="color:#f92672">in</span> tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>wait():</span></span></code></pre></div>
+<p>It gets the “events”, which we can then process. Events range from 
+mouse movements to keyboard strokes. Let’s start by getting some basic 
+keyboard commands and processing them, and based on what we get, we’ll 
+move our little “@” symbol around.</p>
+<p>We <em>could</em> identify which key is being pressed right here in <code>main.py</code>,
+ but this is a good opportunity to break our project up a little bit. 
+Sooner or later, we’re going to have quite a few potential keyboard 
+commands, so putting them all in <code>main.py</code> would make the file longer than it needs to be. Maybe we should import what we need into <code>main.py</code> rather than writing it all there.</p>
+<p>To handle the keyboard inputs and the actions associated with them, let’s actually create <em>two</em>
+ new files. One will hold the different types of “actions” our rogue can
+ perform, and the other will bridge the gap between the keys we press 
+and those actions.</p>
+<p>Create two new Python files in your project’s directory, one called <code>input_handlers.py</code>, and the other called <code>actions.py</code>. Let’s fill out <code>actions.py</code> first:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Action</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EscapeAction</span>(Action):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">pass</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MovementAction</span>(Action):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, dx: int, dy: int):
+</span></span><span style="display:flex;"><span>        super()<span style="color:#f92672">.</span>__init__()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>dx <span style="color:#f92672">=</span> dx
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>dy <span style="color:#f92672">=</span> dy</span></span></code></pre></div>
+<p>We define three classes: <code>Action</code>, <code>EscapeAction</code>, and <code>MovementAction</code>. <code>EscapeAction</code> and <code>MovementAction</code> are subclasses of <code>Action</code>.</p>
+<p>So what’s the plan for these classes? Basically, whenever we have an “action”, we’ll use one of the subclasses of <code>Action</code> to describe it. We’ll be able to detect which subclass we’re using, and respond accordingly. In this case, <code>EscapeAction</code> will be when we hit the <code>Esc</code> key (to exit the game), and <code>MovementAction</code> will be used to describe our player moving around.</p>
+<p>There might be instances where we need to know more than just the “type” of action, like in the case of <code>MovementAction</code>. There, we need to know not only that we’re trying to move, but in which direction. Therefore, we can pass the <code>dx</code> and <code>dy</code> arguments to <code>MovementAction</code>, which will tell us where the player is trying to move to. Other <code>Action</code> subclasses might contain additional data as well, and others might just be subclasses with nothing else in them, like <code>EscapeAction</code>.</p>
+<p>That’s all we need to do in <code>actions.py</code> right now. Let’s fill out <code>input_handlers.py</code>, which will use the <code>Action</code> class and subclasses we just created:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#f92672">from</span> typing <span style="color:#f92672">import</span> Optional
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> tcod.event
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> actions <span style="color:#f92672">import</span> Action, EscapeAction, MovementAction
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EventHandler</span>(tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>EventDispatch[Action]):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ev_quit</span>(self, event: tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>Quit) <span style="color:#f92672">-&gt;</span> Optional[Action]:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">SystemExit</span>()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ev_keydown</span>(self, event: tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>KeyDown) <span style="color:#f92672">-&gt;</span> Optional[Action]:
+</span></span><span style="display:flex;"><span>        action: Optional[Action] <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        key <span style="color:#f92672">=</span> event<span style="color:#f92672">.</span>sym
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> key <span style="color:#f92672">==</span> tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>K_UP:
+</span></span><span style="display:flex;"><span>            action <span style="color:#f92672">=</span> MovementAction(dx<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, dy<span style="color:#f92672">=-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> key <span style="color:#f92672">==</span> tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>K_DOWN:
+</span></span><span style="display:flex;"><span>            action <span style="color:#f92672">=</span> MovementAction(dx<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, dy<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> key <span style="color:#f92672">==</span> tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>K_LEFT:
+</span></span><span style="display:flex;"><span>            action <span style="color:#f92672">=</span> MovementAction(dx<span style="color:#f92672">=-</span><span style="color:#ae81ff">1</span>, dy<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> key <span style="color:#f92672">==</span> tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>K_RIGHT:
+</span></span><span style="display:flex;"><span>            action <span style="color:#f92672">=</span> MovementAction(dx<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>, dy<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> key <span style="color:#f92672">==</span> tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>K_ESCAPE:
+</span></span><span style="display:flex;"><span>            action <span style="color:#f92672">=</span> EscapeAction()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># No valid key was pressed</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> action</span></span></code></pre></div>
+<p>Let’s go over what we’ve added.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#f92672">from</span> typing <span style="color:#f92672">import</span> Optional</span></span></code></pre></div>
+<p>This is part of Python’s type hinting system (which you don’t have to include in your project). <code>Optional</code> denotes something that could be set to <code>None</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#f92672">import</span> tcod.event
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> actions <span style="color:#f92672">import</span> Action, EscapeAction, MovementAction</span></span></code></pre></div>
+<p>We’re importing <code>tcod.event</code> so that we can use tcod’s event system. We don’t need to import <code>tcod</code>, as we only need the contents of <code>event</code>.</p>
+<p>The next line imports the <code>Action</code> class and its subclasses that we just created.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EventHandler</span>(tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>EventDispatch[Action]):</span></span></code></pre></div>
+<p>We’re creating a class called <code>EventHandler</code>, which is a subclass of tcod’s <code>EventDispatch</code> class. <code>EventDispatch</code>
+ is a class that allows us to send an event to its proper method based 
+on what type of event it is. Let’s take a look at the methods we’re 
+creating for <code>EventHandler</code> to see a few examples of this.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ev_quit</span>(self, event: tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>Quit) <span style="color:#f92672">-&gt;</span> Optional[Action]:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">SystemExit</span>()</span></span></code></pre></div>
+<p>Here’s an example of us using a method of <code>EventDispatch</code>: <code>ev_quit</code> is a method defined in <code>EventDispatch</code>, which we’re overriding in <code>EventHandler</code>. <code>ev_quit</code>
+ is called when we receive a “quit” event, which happens when we click 
+the “X” in the window of the program. In that case, we want to quit the 
+program, so we raise <code>SystemExit()</code> to do so.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">ev_keydown</span>(self, event: tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>KeyDown) <span style="color:#f92672">-&gt;</span> Optional[Action]:</span></span></code></pre></div>
+<p>This method will receive key press events, and return either an <code>Action</code> subclass, or <code>None</code>, if no valid key was pressed.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>        action: Optional[Action] <span style="color:#f92672">=</span> <span style="color:#66d9ef">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        key <span style="color:#f92672">=</span> event<span style="color:#f92672">.</span>sym</span></span></code></pre></div>
+<p><code>action</code> is the variable that will hold whatever subclass of <code>Action</code> we end up assigning it to. If no valid key press is found, it will remain set to <code>None</code>. We’ll return it either way.</p>
+<p><code>key</code> holds the actual key we pressed. It doesn’t contain additional information about modifiers like <code>Shift</code> or <code>Alt</code>, just the actual key that was pressed. That’s all we need right now.</p>
+<p>From there, we go down a list of possible keys pressed. For example:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> key <span style="color:#f92672">==</span> tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>K_UP:
+</span></span><span style="display:flex;"><span>            action <span style="color:#f92672">=</span> MovementAction(dx<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>, dy<span style="color:#f92672">=-</span><span style="color:#ae81ff">1</span>)</span></span></code></pre></div>
+<p>In this case, the user pressed the up-arrow key, so we’re creating a <code>MovementAction</code>. Notice that here (and in all the other cases of <code>MovementAction</code>) we provide <code>dx</code> and <code>dy</code>. These describe which direction our character will move in.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>        <span style="color:#66d9ef">elif</span> key <span style="color:#f92672">==</span> tcod<span style="color:#f92672">.</span>event<span style="color:#f92672">.</span>K_ESCAPE:
+</span></span><span style="display:flex;"><span>            action <span style="color:#f92672">=</span> EscapeAction()</span></span></code></pre></div>
+<p>If the user pressed the “Escape” key, we return <code>EscapeAction</code>. We’ll use this to exit the game for now, though in the future, <code>EscapeAction</code> can be used to do things like exit menus.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> action</span></span></code></pre></div>
+<p>Whether <code>action</code> is assigned to an <code>Action</code> subclass or <code>None</code>, we return it.</p>
+<p>Let’s put our new actions and input handlers to use in <code>main.py</code>. Edit <code>main.py</code> like this:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>#!/usr/bin/env python3
+</span></span><span style="display:flex;"><span>import tcod
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+from actions import EscapeAction, MovementAction
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+from input_handlers import EventHandler
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>def main() -&gt; None:
+</span></span><span style="display:flex;"><span>    screen_width = 80
+</span></span><span style="display:flex;"><span>    screen_height = 50
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    player_x = int(screen_width / 2)
+</span></span><span style="display:flex;"><span>    player_y = int(screen_height / 2)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    tileset = tcod.tileset.load_tilesheet(
+</span></span><span style="display:flex;"><span>        "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   event_handler = EventHandler()
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>    with tcod.context.new_terminal(
+</span></span><span style="display:flex;"><span>        ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            ...
+</span></span><span style="display:flex;"><span>            for event in tcod.event.wait():
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-               if event.type == "QUIT":
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-                   raise SystemExit()
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               action = event_handler.dispatch(event)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               if action is None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   continue
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               if isinstance(action, MovementAction):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   player_x += action.dx
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   player_y += action.dy
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               elif isinstance(action, EscapeAction):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   raise SystemExit()
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>if __name__ == "__main__":
+</span></span><span style="display:flex;"><span>    main()
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>#!/usr/bin/env python3
+import tcod
+
+<span class="new-text">from actions import EscapeAction, MovementAction
+from input_handlers import EventHandler</span>
+
+
+def main() -&gt; None:
+    screen_width = 80
+    screen_height = 50
+
+    player_x = int(screen_width / 2)
+    player_y = int(screen_height / 2)
+
+    tileset = tcod.tileset.load_tilesheet(
+        "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
+    )
+
+    <span class="new-text">event_handler = EventHandler()</span>
+
+    with tcod.context.new_terminal(
+        ...
+
+            ...
+            for event in tcod.event.wait():
+                <span class="crossed-out-text">if event.type == "QUIT":</span>
+                    <span class="crossed-out-text">raise SystemExit()</span>
+                <span class="new-text">
+                action = event_handler.dispatch(event)
+
+                if action is None:
+                    continue
+
+                if isinstance(action, MovementAction):
+                    player_x += action.dx
+                    player_y += action.dy
+
+                elif isinstance(action, EscapeAction):
+                    raise SystemExit()</span>
+
+
+if __name__ == "__main__":
+    main()</pre>
+
+</div>
+
+</div>
+
+<p>Let’s break down the new additions a bit.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#f92672">from</span> actions <span style="color:#f92672">import</span> EscapeAction, MovementAction
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> input_handlers <span style="color:#f92672">import</span> EventHandler</span></span></code></pre></div>
+<p>We’re importing the <code>EscapeAction</code> and <code>MovementAction</code> from <code>actions</code>, and <code>EventHandler</code> from <code>input_handlers</code>. This allows us to use the functions we wrote in those files in our <code>main</code> file.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>    event_handler <span style="color:#f92672">=</span> EventHandler()</span></span></code></pre></div>
+<p><code>event_handler</code> is an instance of our <code>EventHandler</code> class. We’ll use it to receive events and process them.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>                action <span style="color:#f92672">=</span> event_handler<span style="color:#f92672">.</span>dispatch(event)</span></span></code></pre></div>
+<p>We send the <code>event</code> to our <code>event_handler</code>’s “dispatch” method, which sends the event to its proper place. In this case, a keyboard event will be sent to the <code>ev_keydown</code> method we wrote. The <code>Action</code> returned from that method is assigned to our local <code>action</code> variable.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> action <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">continue</span></span></span></code></pre></div>
+<p>This is pretty straightforward: If <code>action</code> is <code>None</code>
+ (that is, no key was pressed, or the key pressed isn’t recognized), 
+then we skip over the rest the loop. There’s no need to go any further, 
+since the lines below are going to handle the valid key presses.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> isinstance(action, MovementAction):
+</span></span><span style="display:flex;"><span>                    player_x <span style="color:#f92672">+=</span> action<span style="color:#f92672">.</span>dx
+</span></span><span style="display:flex;"><span>                    player_y <span style="color:#f92672">+=</span> action<span style="color:#f92672">.</span>dy</span></span></code></pre></div>
+<p>Now we arrive at the interesting part. If the <code>action</code> is an instance of the class <code>MovementAction</code>, we need to move our “@” symbol. We grab the <code>dx</code> and <code>dy</code> values we gave to <code>MovementAction</code> earlier, which will move the “@” symbol in which direction we want it to move. <code>dx</code> and <code>dy</code>, as of now, will only ever be -1, 0, or 1. Regardless of what the value is, we add <code>dx</code> and <code>dy</code> to <code>player_x</code> and <code>player_y</code>, respectively. Because the console is using <code>player_x</code> and <code>player_y</code> to draw where our “@” symbol is, modifying these two variables will cause the symbol to move.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span>                <span style="color:#66d9ef">elif</span> isinstance(action, EscapeAction):
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">raise</span> <span style="color:#a6e22e">SystemExit</span>()</span></span></code></pre></div>
+<p><code>raise SystemExit()</code> should look familiar: it’s how we’re quitting out of the program. So basically, if the user hits the <code>Esc</code> key, our program should exit.</p>
+<p>With all that done, let’s run the program and see what happens!</p>
+<p>Indeed, our “@” symbol does move, but… it’s perhaps not what was expected.</p>
+<p><img src="Part%201%20-%20Drawing%20the%20'@'%20symbol%20and%20moving%20it%20around%20%C2%B7%20Roguelike%20Tutorials_files/snake_the_roguelike.png" alt="Snake the Roguelike?" title="Snake the Roguelike?"></p>
+<p>Unless you’re making a roguelike version of “Snake” (and who knows, 
+maybe you are), we need to fix the “@” symbol being left behind wherever
+ we move. So why is this happening in the first place?</p>
+<p>Turns out, we need to “clear” the console after we’ve drawn it, or 
+we’ll get these leftovers when we draw symbols in their new places. 
+Luckily, this is as easy as adding one line:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>        while True:
+</span></span><span style="display:flex;"><span>            root_console.print(x=player_x, y=player_y, string="@")
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            context.present(root_console)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           root_console.clear()
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>            for event in tcod.event.wait():
+</span></span><span style="display:flex;"><span>                ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>    ...
+        while True:
+            root_console.print(x=player_x, y=player_y, string="@")
+
+            context.present(root_console)
+
+            <span class="new-text">root_console.clear()</span>
+
+            for event in tcod.event.wait():
+                ...</pre>
+
+</div>
+
+</div>
+
+<p>That’s it! Run the project now, and the “@” symbol will move around, without leaving traces of itself behind.</p>
+<p>That wraps up part one of this tutorial! If you’re using git or some
+other form of version control (and I recommend you do), commit your
+changes now.</p>
+<p>If you want to see the code so far in its entirety, <a href="https://github.com/TStand90/tcod_tutorial_v2/tree/2020/part-1">click
+here</a>.</p>
+<p><a href="https://www.rogueliketutorials.com/tutorials/tcod/v2/part-2">Click here to move on to the next part of this
+tutorial.</a></p>
+
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2023
+    
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> &amp; <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="Part%201%20-%20Drawing%20the%20'@'%20symbol%20and%20moving%20it%20around%20%C2%B7%20Roguelike%20Tutorials_files/coder.min.236049395dc3682fb2719640872958e12f1f24067bb09c327b2.js" integrity="sha256-I2BJOV3DaC+ycZZAhylY4S8fJAZ7sJwyeyM+YpDH7aw="></script>
+  
+
+  
+  
+  
+  <script src="Part%201%20-%20Drawing%20the%20'@'%20symbol%20and%20moving%20it%20around%20%C2%B7%20Roguelike%20Tutorials_files/codetabs.min.cc52451e7f25e50f64c1c893826f606d58410d742c214dce.js" integrity="sha256-zFJFHn8l5Q9kwciTgm9gbVhBDXQsIU3OI/tEfJlh8rA="></script>
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+</body></html>

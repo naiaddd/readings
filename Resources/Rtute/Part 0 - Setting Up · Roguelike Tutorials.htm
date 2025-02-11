@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme: dark;"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>
+  Part 0 - Setting Up · Roguelike Tutorials
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="Prior knowledge Link to heading This tutorial assumes some basic familiarity with programming in general, and with Python. If you’ve never used Python before, this tutorial could be a little confusing. There are many free resources online about learning programming and Python (too many to list here), and I’d recommend learning about objects and functions in Python at the very least before attempting to read this tutorial.
+… Of course, there are those who have ignored this advice and done well with this tutorial anyway, so feel free to ignore that last paragraph if you’re feeling bold!">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Part 0 - Setting Up">
+<meta name="twitter:description" content="Prior knowledge Link to heading This tutorial assumes some basic familiarity with programming in general, and with Python. If you’ve never used Python before, this tutorial could be a little confusing. There are many free resources online about learning programming and Python (too many to list here), and I’d recommend learning about objects and functions in Python at the very least before attempting to read this tutorial.
+… Of course, there are those who have ignored this advice and done well with this tutorial anyway, so feel free to ignore that last paragraph if you’re feeling bold!">
+
+<meta property="og:title" content="Part 0 - Setting Up">
+<meta property="og:description" content="Prior knowledge Link to heading This tutorial assumes some basic familiarity with programming in general, and with Python. If you’ve never used Python before, this tutorial could be a little confusing. There are many free resources online about learning programming and Python (too many to list here), and I’d recommend learning about objects and functions in Python at the very least before attempting to read this tutorial.
+… Of course, there are those who have ignored this advice and done well with this tutorial anyway, so feel free to ignore that last paragraph if you’re feeling bold!">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rogueliketutorials.com/tutorials/tcod/v2/part-0/"><meta property="article:section" content="tutorials">
+<meta property="article:published_time" content="2020-06-14T11:25:36-07:00">
+<meta property="article:modified_time" content="2020-06-14T11:25:36-07:00">
+
+
+
+
+<link rel="canonical" href="https://rogueliketutorials.com/tutorials/tcod/v2/part-0/">
+
+
+<link rel="preload" href="https://www.rogueliketutorials.com/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin="">
+
+
+  
+  
+  <link rel="stylesheet" href="Part%200%20-%20Setting%20Up%20%C2%B7%20Roguelike%20Tutorials_files/coder.min.c4d7e93a158eda5a65b3df343745d2092a0a1e2170feeec909.css" integrity="sha256-xNfpOhWO2lpls980N0XSCSoKHiFw/u7JCbiolEOQPGo=" crossorigin="anonymous" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="Part%200%20-%20Setting%20Up%20%C2%B7%20Roguelike%20Tutorials_files/coder-dark.min.78b5fe3864945faf5207fb8fe3ab2320d49c3365def0e.css" integrity="sha256-eLX+OGSUX69SB/uP46sjINScM2Xe8OiKwd8N2txUoDw=" crossorigin="anonymous" media="screen">
+  
+
+
+
+ 
+  
+    
+    <link rel="stylesheet" href="Part%200%20-%20Setting%20Up%20%C2%B7%20Roguelike%20Tutorials_files/style.min.9d3eb202952dddb888856ff12c83bc88de866c596286bfb4c1.css" integrity="sha256-nT6yApUt3biIhW/xLIO8iN6GbFlihr+0wfjmvq2a42Y=" crossorigin="anonymous" media="screen">
+  
+
+
+
+
+
+<link rel="icon" type="image/png" href="https://www.rogueliketutorials.com/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://www.rogueliketutorials.com/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://www.rogueliketutorials.com/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://www.rogueliketutorials.com/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://www.rogueliketutorials.com/site.webmanifest">
+<link rel="mask-icon" href="https://www.rogueliketutorials.com/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  <link href="data:text/css,%3Ais(%5Bid*%3D'google_ads_iframe'%5D%2C%5Bid*%3D'taboola-'%5D%2C.taboolaHeight%2C.taboola-placeholder%2C%23credential_picker_container%2C%23credentials-picker-container%2C%23credential_picker_iframe%2C%5Bid*%3D'google-one-tap-iframe'%5D%2C%23google-one-tap-popup-container%2C.google-one-tap-modal-div%2C%23amp_floatingAdDiv%2C%23ez-content-blocker-container)%20%7Bdisplay%3Anone!important%3Bmin-height%3A0!important%3Bheight%3A0!important%3B%7D" rel="stylesheet" type="text/css"></head>
+
+
+
+
+
+
+<body class="colorscheme-dark">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://www.rogueliketutorials.com/">
+      Roguelike Tutorials
+    </a>
+    
+      <input type="checkbox" id="menu-toggle">
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/">Home</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/tutorials/tcod/v2/">TCOD Tutorial (2020)</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/tutorials/tcod/2019/">TCOD Tutorial (2019)</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://rogueliketutorials.com/tutorials/tcod/v2/part-0/">
+          Part 0 - Setting Up
+        </a>
+      </h1>
+    </header>
+
+    <h4 id="prior-knowledge">
+  Prior knowledge
+  <a class="heading-link" href="#prior-knowledge">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>This tutorial assumes some basic familiarity with programming in
+general, and with Python. If you’ve never used Python before, this
+tutorial could be a little confusing. There are many free resources
+online about learning programming and Python (too many to list here),
+and I’d recommend learning about objects and functions in Python at the
+very least before attempting to read this tutorial.</p>
+<p>… Of course, there are those who have ignored this advice and done
+well with this tutorial anyway, so feel free to ignore that last
+paragraph if you’re feeling bold!</p>
+<h4 id="installation">
+  Installation
+  <a class="heading-link" href="#installation">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>To do this tutorial, you’ll need Python version 3.7 or higher. The
+latest version of Python is recommended (currently 3.8 as of June
+2020). <strong>Note: Python 2 is not compatible.</strong></p>
+<p><a href="https://www.python.org/downloads/">Download Python here</a>.</p>
+<p>You’ll also want the latest version of the TCOD library, which is what
+this tutorial is based on.</p>
+<p><a href="https://python-tcod.readthedocs.io/en/latest/installation.html">Installation instructions for TCOD can be found
+here.</a></p>
+<p>While you can certainly install TCOD and complete this tutorial without
+it, I’d highly recommend using a virtual environment. <a href="https://docs.python.org/3/library/venv.html">Documentation on
+how to do that can be found
+here.</a></p>
+<p>Additionally, if you are going to use a virtual environment, you may want to take the time to set up a <code>requirements.txt</code>
+ file. This will allow you to track your project dependencies if you add
+ any in the future, and more easily install them if you need to (for 
+example, if you pull from a remote git repository).</p>
+<p>You can set up your <code>requirements.txt</code> file in the same directory that you plan on working in for the project. Create the file <code>requirements.txt</code> and put the following in it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>tcod&gt;=11.13
+</span></span><span style="display:flex;"><span>numpy&gt;=1.18</span></span></code></pre></div>
+<p>Once that’s done, with your virtual environment activated, type the following command:</p>
+<p><code>pip install -r requirements.txt</code></p>
+<p>This should install the TCOD library, along with its dependency, numpy.</p>
+<p>Depending on your computer, you might also need to install SDL2.
+Check the instructions for installing it based on your operating system.
+For example, Ubuntu can install it with the following command:</p>
+<p><code>sudo apt-get install libsdl2-dev</code></p>
+<h4 id="editors">
+  Editors
+  <a class="heading-link" href="#editors">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>Any text editor can work for writing Python. You could even use Notepad
+if you really wanted to. Personally, I’m a fan of
+<a href="https://www.jetbrains.com/pycharm/">Pycharm</a> and <a href="https://code.visualstudio.com/">Visual Studio
+Code</a>. Whatever you choose, I strongly
+recommend something that can help catch Python syntax errors at the very
+least. I’ve been working with Python for over five years, and I still
+make these types of mistakes all the time!</p>
+<h4 id="making-sure-python-works">
+  Making sure Python works
+  <a class="heading-link" href="#making-sure-python-works">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h4>
+<p>To verify that your installation of both Python 3 and TCOD are working,
+create a new file (in whatever directory you plan on using for the
+tutorial) called <code>main.py</code>, and enter the following text into it:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> tcod
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">"Hello World!"</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">"__main__"</span>:
+</span></span><span style="display:flex;"><span>    main()
+</span></span></code></pre></div><p>Run the file in your terminal (or alternatively in your editor, if
+possible):</p>
+<p><code>python main.py</code></p>
+<p>If you’re not using <code>virtualenv</code>, the command will probably look like
+this:</p>
+<p><code>python3 main.py</code></p>
+<p>You should see “Hello World!” printed out to the terminal. If you
+receive an error, there is probably an issue with either your Python or
+TCOD installation.</p>
+<h3 id="downloading-the-image-file">
+  Downloading the Image File
+  <a class="heading-link" href="#downloading-the-image-file">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>For this tutorial, we’ll need an image file. The default one is provided below.</p>
+<p><img src="Part%200%20-%20Setting%20Up%20%C2%B7%20Roguelike%20Tutorials_files/dejavu10x10_gs_tc.png" alt="Font File"></p>
+<p>Right click the image and save it to the same directory that you’re planning on
+placing your code in. If the above image is not displaying for some reason,
+it is also <a href="https://raw.githubusercontent.com/TStand90/tcod_tutorial_v2/1667c8995fb0d0fd6df98bd84c0be46cb8b78dac/dejavu10x10_gs_tc.png">available for download here.</a></p>
+<h3 id="about-this-site">
+  About this site
+  <a class="heading-link" href="#about-this-site">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Code snippets in this website are presented in a way that tries to convey
+exactly what the user should be adding to a file at what time. When a user
+is expected to create a file from scratch and enter code into it, it will
+be represented with standard Python code highlighting, like so:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py3" data-lang="py3"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Fighter</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> __init__(self, hp, defense, power):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>max_hp <span style="color:#f92672">=</span> hp
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>hp <span style="color:#f92672">=</span> hp
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>defense <span style="color:#f92672">=</span> defense
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>power <span style="color:#f92672">=</span> power</span></span></code></pre></div>
+<p>*<em>Taken from part 6</em>.</p>
+<p>Most of the time, you’ll be editing a file and code that already exists.
+In such cases, the code will be displayed like this:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+   <div class="data-pane active" data-pane="diff">
+   <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>class Entity:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-   def __init__(self, x, y, char, color, name, blocks=False):
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+   def __init__(self, x, y, char, color, name, blocks=False, fighter=None, ai=None):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>       self.x = x
+</span></span><span style="display:flex;"><span>       self.y = y
+</span></span><span style="display:flex;"><span>       self.char = char
+</span></span><span style="display:flex;"><span>       self.color = color
+</span></span><span style="display:flex;"><span>       self.name = name
+</span></span><span style="display:flex;"><span>       self.blocks = blocks
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.fighter = fighter
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.ai = ai
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if self.fighter:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.fighter.owner = self
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if self.ai:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.ai.owner = self
+</span></span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>class Entity:
+    <span class="crossed-out-text">def __init__(self, x, y, char, color, name, blocks=False):</span>
+    <span class="new-text">def __init__(self, x, y, char, color, name, blocks=False, fighter=None, ai=None):</span>
+        self.x = x
+        self.y = y
+        self.char = char
+        self.color = color
+        self.name = name
+        self.blocks = blocks
+        <span class="new-text">self.fighter = fighter
+        self.ai = ai
+
+        if self.fighter:
+            self.fighter.owner = self
+
+        if self.ai:
+            self.ai.owner = self</span></pre>
+
+</div>
+
+</div>
+
+<p>*<em>Also taken from part 6.</em></p>
+<p>Clicking a button above the code section changes the “style” for not just that code block,
+but the entire website. You can switch between these styles at any time.</p>
+<p>In the case of the example above, you would remove the old <code>__init__</code> definition, replacing
+it with the new one. Then, you’d add the necessary lines at the bottom. Both styles convey
+the same idea.</p>
+<p>But what’s the difference? The “Diff” style shows the code as you might find it when doing
+a Git diff comparison (hence the name). It shows plusses and minuses on the side to denote
+whether you should be adding or subtracting a line from a file. The “Original” style shows
+the same thing, but it crosses out the lines to remove and does not have plusses nor minuses.</p>
+<p>The benefit of the “Diff” style is that it doesn’t rely on color to denote what to add, making
+it more accessible all around. The drawback is that it’s impossible to accurately display the
+proper indentation in some instances. The plusses and minuses take up one space, so in a code
+section like this one, be sure not to leave the space for the plus in your code (there should
+be no spaces before “from”):</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>import tcod
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+from input_handlers import handle_keys
+</span></span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+    <pre>import tcod
+
+<span class="new-text">from input_handlers import handle_keys</span></pre>
+
+</div>
+
+</div>
+
+<p>The “Original” style omits the + and - symbols and doesn’t have the indentation issue,
+making it a bit easier to copy and paste code sections.</p>
+<p>Which style you use is a matter of personal preference. The actual code of the tutorial
+remains the same.</p>
+<h3 id="getting-help">
+  Getting help
+  <a class="heading-link" href="#getting-help">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Be sure to check out the <a href="https://www.reddit.com/r/roguelikedev">Roguelike Development
+Subreddit</a> for help. There’s a
+link there to the Discord channel as well.</p>
+<hr>
+<h3 id="ready-to-go">
+  Ready to go?
+  <a class="heading-link" href="#ready-to-go">
+    <i class="fa fa-link" aria-hidden="true" title="Link to heading"></i>
+    <span class="sr-only">Link to heading</span>
+  </a>
+</h3>
+<p>Once you’re set up and ready to go, you can proceed to <a href="https://www.rogueliketutorials.com/tutorials/tcod/v2/part-1">Part
+1</a>.</p>
+
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2023
+    
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> &amp; <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="Part%200%20-%20Setting%20Up%20%C2%B7%20Roguelike%20Tutorials_files/coder.min.236049395dc3682fb2719640872958e12f1f24067bb09c327b2.js" integrity="sha256-I2BJOV3DaC+ycZZAhylY4S8fJAZ7sJwyeyM+YpDH7aw="></script>
+  
+
+  
+  
+  
+  <script src="Part%200%20-%20Setting%20Up%20%C2%B7%20Roguelike%20Tutorials_files/codetabs.min.cc52451e7f25e50f64c1c893826f606d58410d742c214dce.js" integrity="sha256-zFJFHn8l5Q9kwciTgm9gbVhBDXQsIU3OI/tEfJlh8rA="></script>
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+</body></html>

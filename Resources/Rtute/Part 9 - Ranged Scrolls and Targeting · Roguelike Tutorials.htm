@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme: dark;"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>
+  Part 9 - Ranged Scrolls and Targeting · Roguelike Tutorials
+</title>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+
+
+
+
+<meta name="description" content="Adding health potions was a big step, but we won’t stop there. Let’s continue adding a few items, this time with a focus on offense. We’ll add a few scrolls, which will give the player a one-time ranged attack. This gives the player a lot more tactical options to work with, and is definitely something you’ll want to expand upon in your own game.
+Before we get to that, let’s start by adding the colors we’ll need for this chapter:">
+<meta name="keywords" content="">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Part 9 - Ranged Scrolls and Targeting">
+<meta name="twitter:description" content="Adding health potions was a big step, but we won’t stop there. Let’s continue adding a few items, this time with a focus on offense. We’ll add a few scrolls, which will give the player a one-time ranged attack. This gives the player a lot more tactical options to work with, and is definitely something you’ll want to expand upon in your own game.
+Before we get to that, let’s start by adding the colors we’ll need for this chapter:">
+
+<meta property="og:title" content="Part 9 - Ranged Scrolls and Targeting">
+<meta property="og:description" content="Adding health potions was a big step, but we won’t stop there. Let’s continue adding a few items, this time with a focus on offense. We’ll add a few scrolls, which will give the player a one-time ranged attack. This gives the player a lot more tactical options to work with, and is definitely something you’ll want to expand upon in your own game.
+Before we get to that, let’s start by adding the colors we’ll need for this chapter:">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://rogueliketutorials.com/tutorials/tcod/v2/part-9/"><meta property="article:section" content="tutorials">
+<meta property="article:published_time" content="2020-07-14T00:00:00+00:00">
+<meta property="article:modified_time" content="2020-07-14T00:00:00+00:00">
+
+
+
+
+<link rel="canonical" href="https://rogueliketutorials.com/tutorials/tcod/v2/part-9/">
+
+
+<link rel="preload" href="https://www.rogueliketutorials.com/fonts/forkawesome-webfont.woff2?v=1.2.0" as="font" type="font/woff2" crossorigin="">
+
+
+  
+  
+  <link rel="stylesheet" href="Part%209%20-%20Ranged%20Scrolls%20and%20Targeting%20%C2%B7%20Roguelike%20Tutorials_files/coder.min.c4d7e93a158eda5a65b3df343745d2092a0a1e2170feeec909.css" integrity="sha256-xNfpOhWO2lpls980N0XSCSoKHiFw/u7JCbiolEOQPGo=" crossorigin="anonymous" media="screen">
+
+
+
+
+
+
+  
+    
+    
+    <link rel="stylesheet" href="Part%209%20-%20Ranged%20Scrolls%20and%20Targeting%20%C2%B7%20Roguelike%20Tutorials_files/coder-dark.min.78b5fe3864945faf5207fb8fe3ab2320d49c3365def0e.css" integrity="sha256-eLX+OGSUX69SB/uP46sjINScM2Xe8OiKwd8N2txUoDw=" crossorigin="anonymous" media="screen">
+  
+
+
+
+ 
+  
+    
+    <link rel="stylesheet" href="Part%209%20-%20Ranged%20Scrolls%20and%20Targeting%20%C2%B7%20Roguelike%20Tutorials_files/style.min.9d3eb202952dddb888856ff12c83bc88de866c596286bfb4c1.css" integrity="sha256-nT6yApUt3biIhW/xLIO8iN6GbFlihr+0wfjmvq2a42Y=" crossorigin="anonymous" media="screen">
+  
+
+
+
+
+
+<link rel="icon" type="image/png" href="https://www.rogueliketutorials.com/images/favicon-32x32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="https://www.rogueliketutorials.com/images/favicon-16x16.png" sizes="16x16">
+
+<link rel="apple-touch-icon" href="https://www.rogueliketutorials.com/images/apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://www.rogueliketutorials.com/images/apple-touch-icon.png">
+
+<link rel="manifest" href="https://www.rogueliketutorials.com/site.webmanifest">
+<link rel="mask-icon" href="https://www.rogueliketutorials.com/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<meta name="generator" content="Hugo 0.110.0">
+
+
+
+
+
+  <link href="data:text/css,%3Ais(%5Bid*%3D'google_ads_iframe'%5D%2C%5Bid*%3D'taboola-'%5D%2C.taboolaHeight%2C.taboola-placeholder%2C%23credential_picker_container%2C%23credentials-picker-container%2C%23credential_picker_iframe%2C%5Bid*%3D'google-one-tap-iframe'%5D%2C%23google-one-tap-popup-container%2C.google-one-tap-modal-div%2C%23amp_floatingAdDiv%2C%23ez-content-blocker-container)%20%7Bdisplay%3Anone!important%3Bmin-height%3A0!important%3Bheight%3A0!important%3B%7D" rel="stylesheet" type="text/css"></head>
+
+
+
+
+
+
+<body class="colorscheme-dark">
+  
+<div class="float-container">
+    <a id="dark-mode-toggle" class="colorscheme-toggle">
+        <i class="fa fa-adjust fa-fw" aria-hidden="true"></i>
+    </a>
+</div>
+
+
+  <main class="wrapper">
+    <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://www.rogueliketutorials.com/">
+      Roguelike Tutorials
+    </a>
+    
+      <input type="checkbox" id="menu-toggle">
+      <label class="menu-button float-right" for="menu-toggle">
+        <i class="fa fa-bars fa-fw" aria-hidden="true"></i>
+      </label>
+      <ul class="navigation-list">
+        
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/">Home</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/tutorials/tcod/v2/">TCOD Tutorial (2020)</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/tutorials/tcod/2019/">TCOD Tutorial (2019)</a>
+            </li>
+          
+            <li class="navigation-item">
+              <a class="navigation-link" href="https://www.rogueliketutorials.com/about/">About</a>
+            </li>
+          
+        
+        
+      </ul>
+    
+  </section>
+</nav>
+
+
+    <div class="content">
+      
+  <section class="container page">
+  <article>
+    <header>
+      <h1 class="title">
+        <a class="title-link" href="https://rogueliketutorials.com/tutorials/tcod/v2/part-9/">
+          Part 9 - Ranged Scrolls and Targeting
+        </a>
+      </h1>
+    </header>
+
+    <p>Adding health potions was a big step, but we won’t stop there. 
+Let’s continue adding a few items, this time with a focus on offense. 
+We’ll add a few scrolls, which will give the player a one-time ranged 
+attack. This gives the player a lot more tactical options to work with, 
+and is definitely something you’ll want to expand upon in your own game.</p>
+<p>Before we get to that, let’s start by adding the colors we’ll need for this chapter:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>white = (0xFF, 0xFF, 0xFF)
+</span></span><span style="display:flex;"><span>black = (0x0, 0x0, 0x0)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+red = (0xFF, 0x0, 0x0)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>player_atk = (0xE0, 0xE0, 0xE0)
+</span></span><span style="display:flex;"><span>enemy_atk = (0xFF, 0xC0, 0xC0)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+needs_target = (0x3F, 0xFF, 0xFF)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+status_effect_applied = (0x3F, 0xFF, 0x3F)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>player_die = (0xFF, 0x30, 0x30)
+</span></span><span style="display:flex;"><span>enemy_die = (0xFF, 0xA0, 0x30)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>invalid = (0xFF, 0xFF, 0x00)
+</span></span><span style="display:flex;"><span>impossible = (0x80, 0x80, 0x80)
+</span></span><span style="display:flex;"><span>error = (0xFF, 0x40, 0x40)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>welcome_text = (0x20, 0xA0, 0xFF)
+</span></span><span style="display:flex;"><span>health_recovered = (0x0, 0xFF, 0x0)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>bar_text = white
+</span></span><span style="display:flex;"><span>bar_filled = (0x0, 0x60, 0x0)
+</span></span><span style="display:flex;"><span>bar_empty = (0x40, 0x10, 0x10)
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>white = (0xFF, 0xFF, 0xFF)
+black = (0x0, 0x0, 0x0)
+<span class="new-text">red = (0xFF, 0x0, 0x0)</span>
+
+player_atk = (0xE0, 0xE0, 0xE0)
+enemy_atk = (0xFF, 0xC0, 0xC0)
+<span class="new-text">needs_target = (0x3F, 0xFF, 0xFF)
+status_effect_applied = (0x3F, 0xFF, 0x3F)</span>
+
+player_die = (0xFF, 0x30, 0x30)
+enemy_die = (0xFF, 0xA0, 0x30)
+
+invalid = (0xFF, 0xFF, 0x00)
+impossible = (0x80, 0x80, 0x80)
+error = (0xFF, 0x40, 0x40)
+
+welcome_text = (0x20, 0xA0, 0xFF)
+health_recovered = (0x0, 0xFF, 0x0)
+
+bar_text = white
+bar_filled = (0x0, 0x60, 0x0)
+bar_empty = (0x40, 0x10, 0x10)</pre>
+
+</div>
+
+</div>
+
+<p>Let’s start simple, with a spell that just hits the closest enemy. 
+We’ll create a scroll of lightning, which automatically targets an enemy
+ nearby the player.</p>
+<p>First thing we need is a way to get the closest entity to the entity casting the spell. Let’s add a <code>distance</code> function to <code>Entity</code>, which will give us the distance to an arbitrary point. Open <code>entity.py</code> and add the following function:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>from __future__ import annotations
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>import copy
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+import math
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    def place(self, x: int, y: int, gamemap: Optional[GameMap] = None) -&gt; None:
+</span></span><span style="display:flex;"><span>        ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def distance(self, x: int, y: int) -&gt; float:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       """
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       Return the distance between the current entity and the given (x, y) coordinate.
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       """
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>    def move(self, dx: int, dy: int) -&gt; None:
+</span></span><span style="display:flex;"><span>        ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>from __future__ import annotations
+
+import copy
+<span class="new-text">import math</span>
+from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union
+...
+
+    ...
+    def place(self, x: int, y: int, gamemap: Optional[GameMap] = None) -&gt; None:
+        ...
+
+    <span class="new-text">def distance(self, x: int, y: int) -&gt; float:
+        """
+        Return the distance between the current entity and the given (x, y) coordinate.
+        """
+        return math.sqrt((x - self.x) ** 2 + (y - self.y) ** 2)</span>
+
+    def move(self, dx: int, dy: int) -&gt; None:
+        ...</pre>
+
+</div>
+
+</div>
+
+<p>With that, we can add the component that will handle shooting our lightning bolt. Add the following class to <code>consumable.py</code>:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>class HealingConsumable(Consumable):
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+class LightningDamageConsumable(Consumable):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def __init__(self, damage: int, maximum_range: int):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.damage = damage
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.maximum_range = maximum_range
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def activate(self, action: actions.ItemAction) -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       consumer = action.entity
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       target = None
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       closest_distance = self.maximum_range + 1.0
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       for actor in self.engine.game_map.actors:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           if actor is not consumer and self.parent.gamemap.visible[actor.x, actor.y]:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               distance = consumer.distance(actor.x, actor.y)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               if distance &lt; closest_distance:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   target = actor
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   closest_distance = distance
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if target:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.engine.message_log.add_message(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               f"A lighting bolt strikes the {target.name} with a loud thunder, for {self.damage} damage!"
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           target.fighter.take_damage(self.damage)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.consume()
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       else:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           raise Impossible("No enemy is close enough to strike.")
+</span></span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>class HealingConsumable(Consumable):
+    ...
+
+
+<span class="new-text">class LightningDamageConsumable(Consumable):
+    def __init__(self, damage: int, maximum_range: int):
+        self.damage = damage
+        self.maximum_range = maximum_range
+
+    def activate(self, action: actions.ItemAction) -&gt; None:
+        consumer = action.entity
+        target = None
+        closest_distance = self.maximum_range + 1.0
+
+        for actor in self.engine.game_map.actors:
+            if actor is not consumer and self.parent.gamemap.visible[actor.x, actor.y]:
+                distance = consumer.distance(actor.x, actor.y)
+
+                if distance &lt; closest_distance:
+                    target = actor
+                    closest_distance = distance
+
+        if target:
+            self.engine.message_log.add_message(
+                f"A lighting bolt strikes the {target.name} with a loud thunder, for {self.damage} damage!"
+            )
+            target.fighter.take_damage(self.damage)
+            self.consume()
+        else:
+            raise Impossible("No enemy is close enough to strike.")</span></pre>
+
+</div>
+
+</div>
+
+<p>The <code>__init__</code> function takes two arguments: <code>damage</code>, which dictates how powerful the lightning bolt will be, and <code>maximum_range</code>, which tells us how far it can reach.</p>
+<p>Similar to <code>HealingConsumable</code>, this class has an <code>activate</code>
+ function that describes what to do when the player tries using it. It 
+loops through the actors in the current map, and if the actor is visible
+ and within range, it chooses that actor as the one to strike. If a 
+target was found, we strike the target, dealing the damage (using the <code>take_damage</code>
+ function we defined last time, which ignores defense) and printing out a
+ message. If no target was found, we give an error, and don’t consume 
+the scroll.</p>
+<p>In order to use this, we’ll need to actually place some lightning scrolls on the map. We can do that by adding the scroll to <code>entity_factories.py</code>, and then adjusting the <code>place_entities</code> function in <code>procgen.py</code>. Let’s start with <code>entity_factories.py</code>:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>from components.ai import HostileEnemy
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-from components.consumable import HealingConsumable
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+from components import consumable
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>from components.fighter import Fighter
+</span></span><span style="display:flex;"><span>from components.inventory import Inventory
+</span></span><span style="display:flex;"><span>from entity import Actor, Item
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>health_potion = Item(
+</span></span><span style="display:flex;"><span>    char="!",
+</span></span><span style="display:flex;"><span>    color=(127, 0, 255),
+</span></span><span style="display:flex;"><span>    name="Health Potion",
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-   consumable=HealingConsumable(amount=4),
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+   consumable=consumable.HealingConsumable(amount=4),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+lightning_scroll = Item(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   char="~",
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   color=(255, 255, 0),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   name="Lightning Scroll",
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+)
+</span></span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>from components.ai import HostileEnemy
+<span class="crossed-out-text">from components.consumable import HealingConsumable</span>
+<span class="new-text">from components import consumable</span>
+from components.fighter import Fighter
+from components.inventory import Inventory
+from entity import Actor, Item
+
+...
+health_potion = Item(
+    char="!",
+    color=(127, 0, 255),
+    name="Health Potion",
+    <span class="crossed-out-text">consumable=HealingConsumable(amount=4),</span>
+    <span class="new-text">consumable=consumable.HealingConsumable(amount=4),</span>
+)
+<span class="new-text">lightning_scroll = Item(
+    char="~",
+    color=(255, 255, 0),
+    name="Lightning Scroll",
+    consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5),
+)</span></pre>
+
+</div>
+
+</div>
+
+<p>Notice that we also are importing <code>consumable</code> instead of the specific classes inside, which affects our declaration of <code>health_potion</code>. This will save us from having to add a new import every time we create a new consumable class.</p>
+<p>Now, for <code>procgen.py</code>:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    for i in range(number_of_items):
+</span></span><span style="display:flex;"><span>        x = random.randint(room.x1 + 1, room.x2 - 1)
+</span></span><span style="display:flex;"><span>        y = random.randint(room.y1 + 1, room.y2 - 1)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-           entity_factories.health_potion.spawn(dungeon, x, y)
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+           item_chance = random.random()
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           if item_chance &lt; 0.7:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               entity_factories.health_potion.spawn(dungeon, x, y)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           else:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               entity_factories.lightning_scroll.spawn(dungeon, x, y)
+</span></span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>    ...
+    for i in range(number_of_items):
+        x = random.randint(room.x1 + 1, room.x2 - 1)
+        y = random.randint(room.y1 + 1, room.y2 - 1)
+
+        if not any(entity.x == x and entity.y == y for entity in dungeon.entities):
+            <span class="crossed-out-text">entity_factories.health_potion.spawn(dungeon, x, y)</span>
+            <span class="new-text">item_chance = random.random()
+
+            if item_chance &lt; 0.7:
+                entity_factories.health_potion.spawn(dungeon, x, y)
+            else:
+                entity_factories.lightning_scroll.spawn(dungeon, x, y)</span></pre>
+
+</div>
+
+</div>
+
+<p>Like with the monsters, we’re getting a random number and deciding 
+what to spawn based on a percentage chance. Most of our items will still
+ be health potions, but we should have a chance of getting a lightning 
+scroll instead now.</p>
+<p>Run the project, and try picking up some lightning scrolls and zapping some trolls!</p>
+<p><img src="Part%209%20-%20Ranged%20Scrolls%20and%20Targeting%20%C2%B7%20Roguelike%20Tutorials_files/part-9-lightning-scrolls.png" alt="Part 9 - Lightning Scrolls"></p>
+<p>That one was a bit on the easy side. Let’s try something a little 
+more challenging, something that requires us to target an enemy (or an 
+area) before shooting off the spell.</p>
+<p>This will take a few steps, but one of the things we can do on the 
+way to that goal is add a way for the player to “look around” the map 
+using either the mouse or keyboard. We already kind of did this with the
+ mouse in part 7, however, most roguelikes allow the user to play the 
+game entirely with the keyboard.</p>
+<p>Open up <code>input_handlers.py</code> and add the following contents:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>WAIT_KEYS = {
+</span></span><span style="display:flex;"><span>    tcod.event.K_PERIOD,
+</span></span><span style="display:flex;"><span>    tcod.event.K_KP_5,
+</span></span><span style="display:flex;"><span>    tcod.event.K_CLEAR,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+CONFIRM_KEYS = {
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   tcod.event.K_RETURN,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   tcod.event.K_KP_ENTER,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+}
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>class InventoryDropHandler(InventoryEventHandler):
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+class SelectIndexHandler(AskUserEventHandler):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   """Handles asking the user for an index on the map."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def __init__(self, engine: Engine):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       """Sets the cursor to the player when this handler is constructed."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       super().__init__(engine)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       player = self.engine.player
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       engine.mouse_location = player.x, player.y
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def on_render(self, console: tcod.Console) -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       """Highlight the tile under the cursor."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       super().on_render(console)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       x, y = self.engine.mouse_location
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       console.tiles_rgb["bg"][x, y] = color.white
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       console.tiles_rgb["fg"][x, y] = color.black
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def ev_keydown(self, event: tcod.event.KeyDown) -&gt; Optional[Action]:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       """Check for key movement or confirmation keys."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       key = event.sym
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if key in MOVE_KEYS:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           modifier = 1  # Holding modifier keys will speed up key movement.
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           if event.mod &amp; (tcod.event.KMOD_LSHIFT | tcod.event.KMOD_RSHIFT):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               modifier *= 5
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           if event.mod &amp; (tcod.event.KMOD_LCTRL | tcod.event.KMOD_RCTRL):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               modifier *= 10
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           if event.mod &amp; (tcod.event.KMOD_LALT | tcod.event.KMOD_RALT):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               modifier *= 20
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           x, y = self.engine.mouse_location
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           dx, dy = MOVE_KEYS[key]
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           x += dx * modifier
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           y += dy * modifier
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           # Clamp the cursor index to the map size.
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           x = max(0, min(x, self.engine.game_map.width - 1))
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           y = max(0, min(y, self.engine.game_map.height - 1))
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.engine.mouse_location = x, y
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           return None
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       elif key in CONFIRM_KEYS:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           return self.on_index_selected(*self.engine.mouse_location)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       return super().ev_keydown(event)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -&gt; Optional[Action]:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       """Left click confirms a selection."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if self.engine.game_map.in_bounds(*event.tile):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           if event.button == 1:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               return self.on_index_selected(*event.tile)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       return super().ev_mousebuttondown(event)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def on_index_selected(self, x: int, y: int) -&gt; Optional[Action]:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       """Called when an index is selected."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       raise NotImplementedError()
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+class LookHandler(SelectIndexHandler):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   """Lets the player look around using the keyboard."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def on_index_selected(self, x: int, y: int) -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       """Return to main handler."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.engine.event_handler = MainGameEventHandler(self.engine)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class MainGameEventHandler(EventHandler):
+</span></span><span style="display:flex;"><span>    ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>...
+WAIT_KEYS = {
+    tcod.event.K_PERIOD,
+    tcod.event.K_KP_5,
+    tcod.event.K_CLEAR,
+}
+
+<span class="new-text">CONFIRM_KEYS = {
+    tcod.event.K_RETURN,
+    tcod.event.K_KP_ENTER,
+}</span>
+
+...
+class InventoryDropHandler(InventoryEventHandler):
+    ...
+
+
+<span class="new-text">class SelectIndexHandler(AskUserEventHandler):
+    """Handles asking the user for an index on the map."""
+
+    def __init__(self, engine: Engine):
+        """Sets the cursor to the player when this handler is constructed."""
+        super().__init__(engine)
+        player = self.engine.player
+        engine.mouse_location = player.x, player.y
+
+    def on_render(self, console: tcod.Console) -&gt; None:
+        """Highlight the tile under the cursor."""
+        super().on_render(console)
+        x, y = self.engine.mouse_location
+        console.tiles_rgb["bg"][x, y] = color.white
+        console.tiles_rgb["fg"][x, y] = color.black
+
+    def ev_keydown(self, event: tcod.event.KeyDown) -&gt; Optional[Action]:
+        """Check for key movement or confirmation keys."""
+        key = event.sym
+        if key in MOVE_KEYS:
+            modifier = 1  # Holding modifier keys will speed up key movement.
+            if event.mod &amp; (tcod.event.KMOD_LSHIFT | tcod.event.KMOD_RSHIFT):
+                modifier *= 5
+            if event.mod &amp; (tcod.event.KMOD_LCTRL | tcod.event.KMOD_RCTRL):
+                modifier *= 10
+            if event.mod &amp; (tcod.event.KMOD_LALT | tcod.event.KMOD_RALT):
+                modifier *= 20
+
+            x, y = self.engine.mouse_location
+            dx, dy = MOVE_KEYS[key]
+            x += dx * modifier
+            y += dy * modifier
+            # Clamp the cursor index to the map size.
+            x = max(0, min(x, self.engine.game_map.width - 1))
+            y = max(0, min(y, self.engine.game_map.height - 1))
+            self.engine.mouse_location = x, y
+            return None
+        elif key in CONFIRM_KEYS:
+            return self.on_index_selected(*self.engine.mouse_location)
+        return super().ev_keydown(event)
+
+    def ev_mousebuttondown(self, event: tcod.event.MouseButtonDown) -&gt; Optional[Action]:
+        """Left click confirms a selection."""
+        if self.engine.game_map.in_bounds(*event.tile):
+            if event.button == 1:
+                return self.on_index_selected(*event.tile)
+        return super().ev_mousebuttondown(event)
+
+    def on_index_selected(self, x: int, y: int) -&gt; Optional[Action]:
+        """Called when an index is selected."""
+        raise NotImplementedError()
+
+
+class LookHandler(SelectIndexHandler):
+    """Lets the player look around using the keyboard."""
+
+    def on_index_selected(self, x: int, y: int) -&gt; None:
+        """Return to main handler."""
+        self.engine.event_handler = MainGameEventHandler(self.engine)</span>
+
+
+class MainGameEventHandler(EventHandler):
+    ...</pre>
+
+</div>
+
+</div>
+
+<p><code>SelectIndexHandler</code> is what we’ll use when we want to select a tile on the map. It has several methods, which we’ll break down now.</p>
+<p><code>__init__</code> simply sets the <code>mouse_location</code> to 
+the player’s current location. This is so that the cursor we’re about to
+ draw appears over the player first, rather than somewhere else. Chances
+ are, the tile the player wants to select will be nearby.</p>
+<p><code>on_render</code> will render the console as normal, by calling <code>super().on_render</code>,
+ but it also adds a cursor on top, that can be used to show where the 
+current cursor position is. This is especially useful if the player is 
+navigating around with the keyboard.</p>
+<p><code>ev_keydown</code> gives us a way to move the cursor we’re 
+drawing around using the keyboard instead of the mouse (using the mouse 
+is still possible). By using the same movement keys we use to move the 
+player around, we can move the cursor around, with a few extra options. 
+By holding, shift, control, or alt while pressing a movement key, the 
+cursor will move around faster by skipping over a few spaces. This could
+ be very helpful if you plan on making your map larger. If the user 
+presses a “confirm” key, the method returns the current cursor’s 
+location.</p>
+<p><code>ev_mousebuttondown</code> also returns the location, if the clicked space is within the map boundaries.</p>
+<p><code>on_index_selected</code> is an abstract method, which will be up to the subclasses to implement. We do that immediately with <code>LookHandler</code>.</p>
+<p><code>LookHandler</code> inherits from <code>SelectIndexHandler</code>, and all it does is return to the <code>MainGameEventHandler</code>
+ when receiving a confirmation key. This is because it doesn’t need to 
+do anything special, it’s just used in the case where our player wants 
+to have a look around.</p>
+<p>We can utilize <code>LookHandler</code> by adding this to <code>ev_keydown</code> in <code>MainGameEventHandler</code>:
+</p><div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>        ...
+</span></span><span style="display:flex;"><span>        elif key == tcod.event.K_i:
+</span></span><span style="display:flex;"><span>            self.engine.event_handler = InventoryActivateHandler(self.engine)
+</span></span><span style="display:flex;"><span>        elif key == tcod.event.K_d:
+</span></span><span style="display:flex;"><span>            self.engine.event_handler = InventoryDropHandler(self.engine)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       elif key == tcod.event.K_SLASH:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.engine.event_handler = LookHandler(self.engine)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>        # No valid key was pressed
+</span></span><span style="display:flex;"><span>        return action
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>        ...
+        elif key == tcod.event.K_i:
+            self.engine.event_handler = InventoryActivateHandler(self.engine)
+        elif key == tcod.event.K_d:
+            self.engine.event_handler = InventoryDropHandler(self.engine)
+        <span class="new-text">elif key == tcod.event.K_SLASH:
+            self.engine.event_handler = LookHandler(self.engine)</span>
+
+        # No valid key was pressed
+        return action</pre>
+
+</div>
+
+</div>
+<p></p>
+<p>By pressing the forward slash key, you can look around the map with 
+either the mouse or keyboard. Pressing the Escape key (or any 
+non-movement key for that matter) exits this mode.</p>
+<p>Alright, with that in place, we can move on to implementing a scroll 
+that asks for a target. Let’s implement a confusion scroll, which will 
+take a target, and change that target’s AI so that it stumbles around 
+for a few turns before returning to normal.</p>
+<p>We need to define a new type of AI to handle how enemies act when they’re confused. Open up <code>ai.py</code> and add the following:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>from __future__ import annotations
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+import random
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span><span style="color:#f92672">-from typing import List, Tuple, TYPE_CHECKING
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+from typing import List, Optional, Tuple, TYPE_CHECKING
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>import numpy as np  # type: ignore
+</span></span><span style="display:flex;"><span>import tcod
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-from actions import Action, MeleeAction, MovementAction, WaitAction
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>if TYPE_CHECKING:
+</span></span><span style="display:flex;"><span>    from entity import Actor
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class BaseAI(Action):
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+class ConfusedEnemy(BaseAI):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   """
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   A confused enemy will stumble around aimlessly for a given number of turns, then revert back to its previous AI.
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   If an actor occupies a tile it is randomly moving into, it will attack.
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   """
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def __init__(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self, entity: Actor, previous_ai: Optional[BaseAI], turns_remaining: int
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   ):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       super().__init__(entity)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.previous_ai = previous_ai
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.turns_remaining = turns_remaining
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def perform(self) -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       # Revert the AI back to the original state if the effect has run its course.
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if self.turns_remaining &lt;= 0:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.engine.message_log.add_message(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               f"The {self.entity.name} is no longer confused."
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.entity.ai = self.previous_ai
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       else:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           # Pick a random direction
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           direction_x, direction_y = random.choice(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               [
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   (-1, -1),  # Northwest
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   (0, -1),  # North
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   (1, -1),  # Northeast
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   (-1, 0),  # West
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   (1, 0),  # East
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   (-1, 1),  # Southwest
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   (0, 1),  # South
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   (1, 1),  # Southeast
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               ]
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.turns_remaining -= 1
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           # The actor will either try to move or attack in the chosen random direction.
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           # Its possible the actor will just bump into the wall, wasting a turn.
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           return BumpAction(self.entity, direction_x, direction_y,).perform()
+</span></span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>from __future__ import annotations
+
+<span class="new-text">import random</span>
+<span class="crossed-out-text">from typing import List, Tuple, TYPE_CHECKING</span>
+<span class="new-text">from typing import List, Optional, Tuple, TYPE_CHECKING</span>
+
+import numpy as np  # type: ignore
+import tcod
+
+<span class="crossed-out-text">from actions import Action, MeleeAction, MovementAction, WaitAction</span>
+<span class="new-text">from actions import Action, BumpAction, MeleeAction, MovementAction, WaitAction</span>
+
+if TYPE_CHECKING:
+    from entity import Actor
+
+
+class BaseAI(Action):
+    ...
+
+
+<span class="new-text">class ConfusedEnemy(BaseAI):
+    """
+    A confused enemy will stumble around aimlessly for a given number of turns, then revert back to its previous AI.
+    If an actor occupies a tile it is randomly moving into, it will attack.
+    """
+
+    def __init__(
+        self, entity: Actor, previous_ai: Optional[BaseAI], turns_remaining: int
+    ):
+        super().__init__(entity)
+
+        self.previous_ai = previous_ai
+        self.turns_remaining = turns_remaining
+
+    def perform(self) -&gt; None:
+        # Revert the AI back to the original state if the effect has run its course.
+        if self.turns_remaining &lt;= 0:
+            self.engine.message_log.add_message(
+                f"The {self.entity.name} is no longer confused."
+            )
+            self.entity.ai = self.previous_ai
+        else:
+            # Pick a random direction
+            direction_x, direction_y = random.choice(
+                [
+                    (-1, -1),  # Northwest
+                    (0, -1),  # North
+                    (1, -1),  # Northeast
+                    (-1, 0),  # West
+                    (1, 0),  # East
+                    (-1, 1),  # Southwest
+                    (0, 1),  # South
+                    (1, 1),  # Southeast
+                ]
+            )
+
+            self.turns_remaining -= 1
+
+            # The actor will either try to move or attack in the chosen random direction.
+            # Its possible the actor will just bump into the wall, wasting a turn.
+            return BumpAction(self.entity, direction_x, direction_y,).perform()</span></pre>
+
+</div>
+
+</div>
+
+<p>The <code>__init__</code> function takes three arguments:</p>
+<ul>
+<li><code>entity</code>: The actor who is being confused.</li>
+<li><code>previous_ai</code>: The AI class that the actor currently has.
+ We need this, because when the confusion effect wears off, we’ll want 
+to revert the entity back to its previous AI.</li>
+<li><code>turns_remaining</code>: How many turns the confusion effect will last for.</li>
+</ul>
+<p><code>perform</code> causes the entity to move in a randomly selected direction. It uses <code>BumpAction</code>,
+ which means that it will try to move into a tile, and if there’s an 
+actor there, it will attack it (regardless if its the player or another 
+monster). Each turn, the <code>turns_remaining</code> will decrement, and when it’s less than or equal to zero, the AI reverts back and the entity is no longer confused.</p>
+<p>In order to inflict this status on an enemy, we’ll need to do a few things. Obviously, we need a consumable that inflicts the <code>ConfusedEnemy</code> AI on an enemy, but we also need a way to select which enemy gets confused.</p>
+<p>To do that, let’s expand on our <code>SelectIndexHandler</code> from earlier. We can create a handler that allows us to select a single enemy and apply some sort of function on it. Open up <code>input_handlers.py</code> and add the following class:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>from __future__ import annotations
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-from typing import Optional, TYPE_CHECKING
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+from typing import Callable, Optional, Tuple, TYPE_CHECKING
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>import tcod
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class LookHandler(SelectIndexHandler):
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+class SingleRangedAttackHandler(SelectIndexHandler):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   """Handles targeting a single enemy. Only the enemy selected will be affected."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def __init__(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self, engine: Engine, callback: Callable[[Tuple[int, int]], Optional[Action]]
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   ):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       super().__init__(engine)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.callback = callback
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def on_index_selected(self, x: int, y: int) -&gt; Optional[Action]:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       return self.callback((x, y))
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class MainGameEventHandler(EventHandler):
+</span></span><span style="display:flex;"><span>    ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>from __future__ import annotations
+
+<span class="crossed-out-text">from typing import Optional, TYPE_CHECKING</span>
+<span class="new-text">from typing import Callable, Optional, Tuple, TYPE_CHECKING</span>
+
+import tcod
+...
+
+
+class LookHandler(SelectIndexHandler):
+    ...
+
+
+<span class="new-text">class SingleRangedAttackHandler(SelectIndexHandler):
+    """Handles targeting a single enemy. Only the enemy selected will be affected."""
+
+    def __init__(
+        self, engine: Engine, callback: Callable[[Tuple[int, int]], Optional[Action]]
+    ):
+        super().__init__(engine)
+
+        self.callback = callback
+
+    def on_index_selected(self, x: int, y: int) -&gt; Optional[Action]:
+        return self.callback((x, y))</span>
+
+
+class MainGameEventHandler(EventHandler):
+    ...</pre>
+
+</div>
+
+</div>
+
+<p><code>SingleRangedAttackHandler</code> doesn’t do much, except define a <code>callback</code> function that activates when the user selects a target. <code>callback</code> can be any function with a Tuple of two integers (x and y coordinates), so <code>SingleRangedAttackHandler</code> can be used for any scroll or ranged attack that targets one location.</p>
+<p>So what do we pass as the <code>callback</code>? Let’s define that now, in <code>consumable.py</code>. We’ll add the component that causes the confusion effect, called <code>ConfusionConsumable</code>. It looks like this:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>import color
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+import components.ai
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>from components.base_component import BaseComponent
+</span></span><span style="display:flex;"><span>from exceptions import Impossible
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+from input_handlers import SingleRangedAttackHandler
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>if TYPE_CHECKING:
+</span></span><span style="display:flex;"><span>    from entity import Actor, Item
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class Consumable(BaseComponent):
+</span></span><span style="display:flex;"><span>    parent: Item
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    def consume(self, consumer: Actor) -&gt; None:
+</span></span><span style="display:flex;"><span>        raise NotImplementedError()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+class ConfusionConsumable(Consumable):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def __init__(self, number_of_turns: int):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.number_of_turns = number_of_turns
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def get_action(self, consumer: Actor) -&gt; Optional[actions.Action]:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.engine.message_log.add_message(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           "Select a target location.", color.needs_target
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.engine.event_handler = SingleRangedAttackHandler(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.engine,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       return None
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def activate(self, action: actions.ItemAction) -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       consumer = action.entity
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       target = action.target_actor
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if not self.engine.game_map.visible[action.target_xy]:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           raise Impossible("You cannot target an area that you cannot see.")
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if not target:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           raise Impossible("You must select an enemy to target.")
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if target is consumer:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           raise Impossible("You cannot confuse yourself!")
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.engine.message_log.add_message(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           f"The eyes of the {target.name} look vacant, as it starts to stumble around!",
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           color.status_effect_applied,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       target.ai = components.ai.ConfusedEnemy(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.consume()
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class HealingConsumable(Consumable):
+</span></span><span style="display:flex;"><span>    ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>...
+import color
+<span class="new-text">import components.ai</span>
+from components.base_component import BaseComponent
+from exceptions import Impossible
+<span class="new-text">from input_handlers import SingleRangedAttackHandler</span>
+
+if TYPE_CHECKING:
+    from entity import Actor, Item
+
+
+class Consumable(BaseComponent):
+    parent: Item
+
+    def consume(self, consumer: Actor) -&gt; None:
+        raise NotImplementedError()
+
+
+<span class="new-text">class ConfusionConsumable(Consumable):
+    def __init__(self, number_of_turns: int):
+        self.number_of_turns = number_of_turns
+
+    def get_action(self, consumer: Actor) -&gt; Optional[actions.Action]:
+        self.engine.message_log.add_message(
+            "Select a target location.", color.needs_target
+        )
+        self.engine.event_handler = SingleRangedAttackHandler(
+            self.engine,
+            callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),
+        )
+        return None
+
+    def activate(self, action: actions.ItemAction) -&gt; None:
+        consumer = action.entity
+        target = action.target_actor
+
+        if not self.engine.game_map.visible[action.target_xy]:
+            raise Impossible("You cannot target an area that you cannot see.")
+        if not target:
+            raise Impossible("You must select an enemy to target.")
+        if target is consumer:
+            raise Impossible("You cannot confuse yourself!")
+
+        self.engine.message_log.add_message(
+            f"The eyes of the {target.name} look vacant, as it starts to stumble around!",
+            color.status_effect_applied,
+        )
+        target.ai = components.ai.ConfusedEnemy(
+            entity=target, previous_ai=target.ai, turns_remaining=self.number_of_turns,
+        )
+        self.consume()</span>
+
+
+class HealingConsumable(Consumable):
+    ...</pre>
+
+</div>
+
+</div>
+
+<p><code>ConfusionConsumable</code> takes one argument in <code>__init__</code>, which is <code>number_of_turns</code>. As you might have guessed, this represents the number of turns that the confusion effect lasts for.</p>
+<p><code>get_action</code> will ask the player to select a target location, and switch the game’s event handler to <code>SingleRangedAttackHandler</code>. The <code>callback</code> is a <code>lambda</code>
+ function (an anonymous, inline function), which takes “xy” as a 
+parameter. “xy” will be the coordinates of the target. The lambda 
+function executes <code>ItemAction</code>, which receives the consumer, the parent (the item), and the “xy” coordinates.</p>
+<p><code>activate</code> is what happens when the player selects a target. First, we get the actor at the location, and make sure that the target is,</p>
+<ol>
+<li>In sight</li>
+<li>A valid actor</li>
+<li>Not the player</li>
+</ol>
+<p>If all those things are true, then we apply the <code>ConfusedEnemy</code> AI to that target, and consume the scroll.</p>
+<p>With the consumable component in place, we can add <code>confusion_scroll</code> to <code>entity_factories.py</code>:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>troll = Actor(
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+confusion_scroll = Item(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   char="~",
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   color=(207, 63, 255),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   name="Confusion Scroll",
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   consumable=consumable.ConfusionConsumable(number_of_turns=10),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>health_potion = Item(
+</span></span><span style="display:flex;"><span>    ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>troll = Actor(
+    ...
+)
+
+<span class="new-text">confusion_scroll = Item(
+    char="~",
+    color=(207, 63, 255),
+    name="Confusion Scroll",
+    consumable=consumable.ConfusionConsumable(number_of_turns=10),
+)</span>
+health_potion = Item(
+    ...</pre>
+
+</div>
+
+</div>
+
+<p>Now that we can create confusion scrolls, let’s add some to the map. Open up <code>procgen.py</code> and adjust the part that places items to look like this:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>            ...
+</span></span><span style="display:flex;"><span>            if item_chance &lt; 0.7:
+</span></span><span style="display:flex;"><span>                entity_factories.health_potion.spawn(dungeon, x, y)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           elif item_chance &lt; 0.9:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               entity_factories.confusion_scroll.spawn(dungeon, x, y)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>            else:
+</span></span><span style="display:flex;"><span>                entity_factories.lightning_scroll.spawn(dungeon, x, y)
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>            ...
+            if item_chance &lt; 0.7:
+                entity_factories.health_potion.spawn(dungeon, x, y)
+            <span class="new-text">elif item_chance &lt; 0.9:
+                entity_factories.confusion_scroll.spawn(dungeon, x, y)</span>
+            else:
+                entity_factories.lightning_scroll.spawn(dungeon, x, y)</pre>
+
+</div>
+
+</div>
+
+<p>Feel free to adjust these percentage values however you see fit. To 
+test out your confusion scrolls, you might want to mess with the numbers
+ here.</p>
+<p>Run the project now, and cast some confusion on your enemies!</p>
+<p><img src="Part%209%20-%20Ranged%20Scrolls%20and%20Targeting%20%C2%B7%20Roguelike%20Tutorials_files/part-9-confusion-scrolls.png" alt="Part 9 - Confusion Scrolls"></p>
+<p>So we currently have two types of ranged spells to use: One that 
+targets the nearest enemy automatically, and one that asks for a target.
+ We’ll finish this chapter by implementing a third type: One that asks 
+for a target, but affects everything within a certain radius of that 
+target. I’m talking, of course, about an exploding fireball spell!</p>
+<p>To implement our fireball, we’ll need a new event handler. <code>SingleRangedAttackHandler</code> isn’t quite enough, because it targets one enemy actor and nothing else. For our fireball, we want to select an <em>area</em>
+ to hit which can include multiple targets, and might even burn the 
+player! It’s not actually necessary that the cursor be on an enemy 
+either; the fireball can be offset to catch multiple enemies in its 
+blast radius.</p>
+<p>So, with that in mind, let’s implement a new event handler, which will handle area of effect attacks. We can call it <code>AreaRangedAttackHandler</code>, and define it like this:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>class SingleRangedAttackHandler(SelectIndexHandler):
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+class AreaRangedAttackHandler(SelectIndexHandler):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   """Handles targeting an area within a given radius. Any entity within the area will be affected."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def __init__(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       engine: Engine,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       radius: int,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       callback: Callable[[Tuple[int, int]], Optional[Action]],
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   ):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       super().__init__(engine)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.radius = radius
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.callback = callback
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def on_render(self, console: tcod.Console) -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       """Highlight the tile under the cursor."""
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       super().on_render(console)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       x, y = self.engine.mouse_location
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       # Draw a rectangle around the targeted area, so the player can see the affected tiles.
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       console.draw_frame(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           x=x - self.radius - 1,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           y=y - self.radius - 1,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           width=self.radius ** 2,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           height=self.radius ** 2,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           fg=color.red,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           clear=False,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def on_index_selected(self, x: int, y: int) -&gt; Optional[Action]:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       return self.callback((x, y))
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class MainGameEventHandler(EventHandler):
+</span></span><span style="display:flex;"><span>    ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>class SingleRangedAttackHandler(SelectIndexHandler):
+    ...
+
+
+<span class="new-text">class AreaRangedAttackHandler(SelectIndexHandler):
+    """Handles targeting an area within a given radius. Any entity within the area will be affected."""
+
+    def __init__(
+        self,
+        engine: Engine,
+        radius: int,
+        callback: Callable[[Tuple[int, int]], Optional[Action]],
+    ):
+        super().__init__(engine)
+
+        self.radius = radius
+        self.callback = callback
+
+    def on_render(self, console: tcod.Console) -&gt; None:
+        """Highlight the tile under the cursor."""
+        super().on_render(console)
+
+        x, y = self.engine.mouse_location
+
+        # Draw a rectangle around the targeted area, so the player can see the affected tiles.
+        console.draw_frame(
+            x=x - self.radius - 1,
+            y=y - self.radius - 1,
+            width=self.radius ** 2,
+            height=self.radius ** 2,
+            fg=color.red,
+            clear=False,
+        )
+
+    def on_index_selected(self, x: int, y: int) -&gt; Optional[Action]:
+        return self.callback((x, y))</span>
+
+
+class MainGameEventHandler(EventHandler):
+    ...</pre>
+
+</div>
+
+</div>
+
+<p><code>AreaRangedAttackHandler</code> takes a <code>callback</code>, like <code>SingleRangedAttackHandler</code>, but also defies a <code>radius</code>, which tells us how large the area of effect will be.</p>
+<p><code>on_render</code> highlights the cursor, but also draws a 
+“frame” (an empty rectangle) around the area we’ll be targeting. This 
+will help the player determine which area will be in the blast.</p>
+<p><code>on_index_selected</code> is the same as the one we defined for <code>SingleRangedAttackHandler</code>.</p>
+<p>To do the damage, we’ll need to implement the <code>Consumable</code> class for the fireball scroll. Open up <code>consumable.py</code> and add this class:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>from exceptions import Impossible
+</span></span><span style="display:flex;"><span><span style="color:#f92672">-from input_handlers import SingleRangedAttackHandler
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+from input_handlers import AreaRangedAttackHandler, SingleRangedAttackHandler
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>if TYPE_CHECKING:
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class HealingConsumable(Consumable):
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+class FireballDamageConsumable(Consumable):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def __init__(self, damage: int, radius: int):
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.damage = damage
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.radius = radius
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def get_action(self, consumer: Actor) -&gt; Optional[actions.Action]:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.engine.message_log.add_message(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           "Select a target location.", color.needs_target
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.engine.event_handler = AreaRangedAttackHandler(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           self.engine,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           radius=self.radius,
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       return None
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   def activate(self, action: actions.ItemAction) -&gt; None:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       target_xy = action.target_xy
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if not self.engine.game_map.visible[target_xy]:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           raise Impossible("You cannot target an area that you cannot see.")
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       targets_hit = False
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       for actor in self.engine.game_map.actors:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           if actor.distance(*target_xy) &lt;= self.radius:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               self.engine.message_log.add_message(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+                   f"The {actor.name} is engulfed in a fiery explosion, taking {self.damage} damage!"
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               )
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               actor.fighter.take_damage(self.damage)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               targets_hit = True
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       if not targets_hit:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           raise Impossible("There are no targets in the radius.")
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+       self.consume()
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>class LightningDamageConsumable(Consumable):
+</span></span><span style="display:flex;"><span>    ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>...
+from exceptions import Impossible
+<span class="crossed-out-text">from input_handlers import SingleRangedAttackHandler</span>
+<span class="new-text">from input_handlers import AreaRangedAttackHandler, SingleRangedAttackHandler</span>
+
+if TYPE_CHECKING:
+    ...
+
+
+class HealingConsumable(Consumable):
+    ...
+
+
+<span class="new-text">class FireballDamageConsumable(Consumable):
+    def __init__(self, damage: int, radius: int):
+        self.damage = damage
+        self.radius = radius
+
+    def get_action(self, consumer: Actor) -&gt; Optional[actions.Action]:
+        self.engine.message_log.add_message(
+            "Select a target location.", color.needs_target
+        )
+        self.engine.event_handler = AreaRangedAttackHandler(
+            self.engine,
+            radius=self.radius,
+            callback=lambda xy: actions.ItemAction(consumer, self.parent, xy),
+        )
+        return None
+
+    def activate(self, action: actions.ItemAction) -&gt; None:
+        target_xy = action.target_xy
+
+        if not self.engine.game_map.visible[target_xy]:
+            raise Impossible("You cannot target an area that you cannot see.")
+
+        targets_hit = False
+        for actor in self.engine.game_map.actors:
+            if actor.distance(*target_xy) &lt;= self.radius:
+                self.engine.message_log.add_message(
+                    f"The {actor.name} is engulfed in a fiery explosion, taking {self.damage} damage!"
+                )
+                actor.fighter.take_damage(self.damage)
+                targets_hit = True
+
+        if not targets_hit:
+            raise Impossible("There are no targets in the radius.")
+        self.consume()</span>
+
+
+class LightningDamageConsumable(Consumable):
+    ...</pre>
+
+</div>
+
+</div>
+
+<p><code>FireballDamageConsumable</code> takes <code>damage</code> and <code>radius</code> as arguments in <code>__init__</code>, which shouldn’t be too surprising.</p>
+<p><code>get_action</code>, similar to the confusion scroll, asks the user to select a target, and switches the event handler, this time to <code>AreaRangedAttackHandler</code>. The callback is once again a <code>lambda</code> function, which is similar to how we handled the confusion scroll.</p>
+<p><code>activate</code> gets the target location, and ensures that it 
+is within the line of sight. It then checks for entities within the 
+radius, damaging any that are close enough to hit (take note, there’s no
+ exception for the player, so you can get blasted by your own 
+fireball!). If no enemies were hit at all, the <code>Impossible</code> 
+exception is raised, and the scroll isn’t consumed, as it would probably
+ be frustrating to waste a scroll on something like a misclick. Assuming
+ at least one entity <em>was</em> damaged, the scroll is consumed.</p>
+<p>Let’s add the new fireball scroll to <code>entity_factories.py</code> so we can put it to use:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>confusion_scroll = Item(
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+fireball_scroll = Item(
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   char="~",
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   color=(255, 0, 0),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   name="Fireball Scroll",
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+   consumable=consumable.FireballDamageConsumable(damage=12, radius=3),
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>health_potion = Item(
+</span></span><span style="display:flex;"><span>    ...
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>confusion_scroll = Item(
+    ...
+)
+<span class="new-text">fireball_scroll = Item(
+    char="~",
+    color=(255, 0, 0),
+    name="Fireball Scroll",
+    consumable=consumable.FireballDamageConsumable(damage=12, radius=3),
+)</span>
+health_potion = Item(
+    ...</pre>
+
+</div>
+
+</div>
+
+<p>Finally, let’s add it to <code>procgen.py</code> so it will show up:</p>
+<div>
+  <button class="btn btn-primary data-toggle-tab active" data-toggle-tab="diff">
+    Diff
+  </button>
+  <button class="btn btn-secondary data-toggle-tab" data-toggle-tab="original">
+    Original
+  </button>
+
+  
+<div class="data-pane active" data-pane="diff">
+  
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>            if item_chance &lt; 0.7:
+</span></span><span style="display:flex;"><span>                entity_factories.health_potion.spawn(dungeon, x, y)
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">+           elif item_chance &lt; 0.8:
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+               entity_factories.fireball_scroll.spawn(dungeon, x, y)
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span>            elif item_chance &lt; 0.9:
+</span></span><span style="display:flex;"><span>                entity_factories.confusion_scroll.spawn(dungeon, x, y)
+</span></span><span style="display:flex;"><span>            else:
+</span></span><span style="display:flex;"><span>                entity_factories.lightning_scroll.spawn(dungeon, x, y)
+</span></span></code></pre></div>
+
+</div>
+<div class="data-pane" data-pane="original">
+  
+<pre>            if item_chance &lt; 0.7:
+                entity_factories.health_potion.spawn(dungeon, x, y)
+            <span class="new-text">elif item_chance &lt; 0.8:
+                entity_factories.fireball_scroll.spawn(dungeon, x, y)</span>
+            elif item_chance &lt; 0.9:
+                entity_factories.confusion_scroll.spawn(dungeon, x, y)
+            else:
+                entity_factories.lightning_scroll.spawn(dungeon, x, y)</pre>
+
+</div>
+
+</div>
+
+<p>Run the project now, and blast away your enemies!</p>
+<p><img src="Part%209%20-%20Ranged%20Scrolls%20and%20Targeting%20%C2%B7%20Roguelike%20Tutorials_files/part-9-fireball-targeting.png" alt="Part 9 - Fireball Targeting"></p>
+<p>With that, we’ve now got three different types of scrolls, and four 
+types of consumables overall! With the event handlers that are in place,
+ it should be fairly simple to add more types of consumables, if you 
+wish. Feel free to experiment with different types of attacks, and add 
+variety to your game.</p>
+<p>If you want to see the code so far in its entirety, <a href="https://github.com/TStand90/tcod_tutorial_v2/tree/2020/part-9">click here</a>.</p>
+<p><a href="https://www.rogueliketutorials.com/tutorials/tcod/v2/part-10">Click here to move on to the next part of this tutorial.</a></p>
+
+  </article>
+</section>
+
+  
+
+    </div>
+
+    <footer class="footer">
+  <section class="container">
+    ©
+    
+    2023
+    
+    ·
+    
+    Powered by <a href="https://gohugo.io/">Hugo</a> &amp; <a href="https://github.com/luizdepra/hugo-coder/">Coder</a>.
+    
+  </section>
+</footer>
+
+  </main>
+
+  
+
+  
+  
+  <script src="Part%209%20-%20Ranged%20Scrolls%20and%20Targeting%20%C2%B7%20Roguelike%20Tutorials_files/coder.min.236049395dc3682fb2719640872958e12f1f24067bb09c327b2.js" integrity="sha256-I2BJOV3DaC+ycZZAhylY4S8fJAZ7sJwyeyM+YpDH7aw="></script>
+  
+
+  
+  
+  
+  <script src="Part%209%20-%20Ranged%20Scrolls%20and%20Targeting%20%C2%B7%20Roguelike%20Tutorials_files/codetabs.min.cc52451e7f25e50f64c1c893826f606d58410d742c214dce.js" integrity="sha256-zFJFHn8l5Q9kwciTgm9gbVhBDXQsIU3OI/tEfJlh8rA="></script>
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+</body></html>
