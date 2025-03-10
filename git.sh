@@ -6,4 +6,4 @@ git add .
 
 git commit -m "Automated commit : $(date)"
 
-git push
+git push -u origin main
