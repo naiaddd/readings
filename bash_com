@@ -1,0 +1,86 @@
+
+// list directory contents
+ls 
+// print directory path 
+pwd
+
+// print directory contents
+dir
+
+// creates a shortcut to dir /usr/* at dir /py 
+ ln -s /usr/lib/python3 /py
+
+nano .hidden
+<folder_to_hide>
+--- hides a folder from view
+
+<program> -s
+-- opens program in a new instance
+
+
+chmod +x - <filename>
+- makes file executable for everyone
+u+x - makes file executable for its owner
+
+// p
+makes parent directories. SYNTAX : mkdir -p ./path/to/folder will make directories 'path', 'to' and 'folder' in present directory
+
+
+// mv
+moves AND/OR renames a directory or file. SYNTAX :  mv /path/to/oldname /path/to/newname
+
+
+
+
+
+
+lookandfeeltool --list to get a list of all available themes on your system.
+lookandfeeltool -a CopyPastaFromTheOutputAbove  to change theme
+
+tlp (8)              - apply laptop power saving settings
+tlp-rdw (8)          - disable Radio Device Wizard temporarily (until reboot).
+tlp-stat (8)         - view power saving status
+tlp.service (8)      - Initialize power saving at boot and cleanup upon shutdown
+
+
+{{{REDSHIFT}}}
+
+redshift -x : reset 
+redshift -O 2500 : set temp to 2500
+
+
+>>>>---- CRON ----<<<<<
+
+Add a New Cron Job
+
+Cron jobs follow this format:
+
+MIN HOUR DOM MON DOW COMMAND
+
+    MIN → Minute (0–59)
+    HOUR → Hour (0–23)
+    DOM → Day of Month (1–31)
+    MON → Month (1–12)
+    DOW → Day of Week (0–7, where both 0 and 7 mean Sunday)
+    COMMAND → The command/script to run
+
+3. Example: Log Network Usage with vnstat
+
+Let’s say you want to log daily bandwidth usage to a file at midnight:
+
+0 0 * * * vnstat -m > ~/vnstat_monthly_usage.log
+
+crontab -e (edit cronjobs)
+crontab -l (list cronjobs)
+
+
+
+
+
+
+
+NETWORK MONITORS
+
+-- vnstat -d (day) -m (month) -i <network interface code> (spec interface inspect)
+
+-- bmon - bandwith monitor -  -p eth0 (real-time monitoring of traffic on port eth0)
